@@ -14,7 +14,7 @@ export default function Home() {
   const socketRef = useRef<Socket | null>(null)
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
+    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string, {
       transports: ["websocket"],
     })
 
@@ -25,14 +25,19 @@ export default function Home() {
       setStatus("chatting")
     })
 
-    socket.on("waiting", () => setStatus("waiting"))
+    socket.on("waiting", () => {
+      setStatus("waiting")
+    })
 
     socket.on("partner_left", () => {
       setRoomId("")
       setStatus("idle")
     })
 
-    return () => socket.disconnect()
+    // ✅ Proper cleanup (no return value)
+    return () => {
+      socket.disconnect()
+    }
   }, [])
 
   const startChat = () => {
@@ -45,7 +50,7 @@ export default function Home() {
     setRoomId("")
     setStatus("idle")
 
-    // Delay prevents SDP race crash
+    // delay prevents SDP race
     setTimeout(() => {
       socketRef.current?.emit("start")
       setStatus("waiting")

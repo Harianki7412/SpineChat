@@ -58,6 +58,7 @@ export default function VideoRoom({ roomId }: { roomId: string }) {
 
     return () => {
       mounted = false
+
       if (zpRef.current) {
         try {
           zpRef.current.leaveRoom()
@@ -80,10 +81,7 @@ export default function VideoRoom({ roomId }: { roomId: string }) {
           {error}
         </div>
       )}
-      <div
-        ref={containerRef}
-        className="absolute inset-0 w-full h-full"
-      />
+      <div ref={containerRef} className="absolute inset-0 w-full h-full" />
     </div>
   )
 }
